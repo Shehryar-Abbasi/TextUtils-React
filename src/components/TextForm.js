@@ -23,28 +23,28 @@ export default function TextForm(props) {
     props.showAlert("Converted to Lowercase!", "success");
   };
 
-  const handleFrequentClick = () => {
-    // Split the paragraph into an array of words
-    const words = text.split(/\W+/);
+  // const handleFrequentClick = () => {
+  //   // Split the paragraph into an array of words
+  //   const words = text.split(/\W+/);
 
-    // Count the occurrences of each word
-    const counts = {};
-    for (let i = 0; i < words.length; i++) {
-      const word = words[i].toLowerCase();
-      if (counts[word]) {
-        counts[word]++;
-      } else {
-        counts[word] = 1;
-      }
-    }
+  //   // Count the occurrences of each word
+  //   const counts = {};
+  //   for (let i = 0; i < words.length; i++) {
+  //     const word = words[i].toLowerCase();
+  //     if (counts[word]) {
+  //       counts[word]++;
+  //     } else {
+  //       counts[word] = 1;
+  //     }
+  //   }
 
-    // Convert the object of word counts to an array and sort it in descending order
-    const countsArray = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  //   // Convert the object of word counts to an array and sort it in descending order
+  //   const countsArray = Object.entries(counts).sort((a, b) => b[1] - a[1]);
 
-    // Update the state variable with the most frequent words
-    setWordCounts(countsArray.slice(0, 10));
-    props.showAlert("Frequent words shown below!..", "success");
-  };
+  //   // Update the state variable with the most frequent words
+  //   setWordCounts(countsArray.slice(0, 10));
+  //   props.showAlert("Frequent words shown below!..", "success");
+  // };
 
   const handleEmailClick = () => {
     // Extract email addresses from the text
@@ -55,9 +55,7 @@ export default function TextForm(props) {
   };
 
   const handleCopyClick = () => {
-    var text = document.getElementById("myBox");
-    text.select();
-    navigator.clipboard.writeText(text.value);
+    navigator.clipboard.writeText(text);
     props.showAlert("Copied to clipboard!", "success");
   };
 
@@ -86,7 +84,7 @@ export default function TextForm(props) {
     <>
       <div
         className="container"
-        style={{ color: props.mode === "dark" ? "white" : "black"}}
+        style={{ color: props.mode === "dark" ? "white" : "black" }}
       >
         <h1>{props.heading}</h1>
         <div className="mb-3">
@@ -96,32 +94,32 @@ export default function TextForm(props) {
             placeholder="Enter text here..."
             onChange={handleOnChange}
             style={{
-              backgroundColor: props.mode === "dark" ? "grey" : "white",
+              backgroundColor: props.mode === "dark" ? "#13466e" : "white",
               color: props.mode === "dark" ? "white" : "#0b2742",
             }}
             id="myBox"
             rows="5"
           ></textarea>
         </div>
-        <button className="btn btn-primary mx-1" onClick={handleUpClick}>
+        <button disabled={text.length===0} className="btn btn-primary mx-1 my-1" onClick={handleUpClick}>
           Convert to Uppercase
         </button>
-        <button className="btn btn-primary mx-1" onClick={handleLoClick}>
+        <button disabled={text.length===0} className="btn btn-primary mx-1 my-1" onClick={handleLoClick}>
           Convert to Lowercase
         </button>
-        <button className="btn btn-success mx-1" onClick={handleFrequentClick}>
+        {/* <button disabled={text.length===0} className="btn btn-success mx-1 my-1" onClick={handleFrequentClick}>
           Frequent Words
-        </button>
-        <button className="btn btn-warning mx-1" onClick={handleEmailClick}>
+        </button> */}
+        <button disabled={text.length===0} className="btn btn-warning mx-1 my-1" onClick={handleEmailClick}>
           Get Email
         </button>
-        <button className="btn btn-primary mx-1" onClick={handleCopyClick}>
+        <button disabled={text.length===0} className="btn btn-primary mx-1 my-1" onClick={handleCopyClick}>
           Copy Text
         </button>
-        <button className="btn btn-primary mx-1" onClick={handleSpacesClick}>
+        <button disabled={text.length===0} className="btn btn-primary mx-1 my-1" onClick={handleSpacesClick}>
           Remove Extra Spaces
         </button>
-        <button className="btn btn-danger mx-1" onClick={handleClearClick}>
+        <button disabled={text.length===0} className="btn btn-danger mx-1 my-1" onClick={handleClearClick}>
           Clear
         </button>
       </div>
@@ -132,12 +130,12 @@ export default function TextForm(props) {
         <h2>Your text summary</h2>
         <p>
           <b>
-            {text.split(" ").length} words and {text.length} characters
+            {text.split(/\s+/).filter((element) => { return element.length !== 0 }).length} words and {text.length} characters
           </b>
         </p>
-        <p>{0.008 * text.split(" ").length} Minutes read </p>
+        <p>{0.008 * text.split(" ").filter((element) => { return element.length !== 0 }).length} Minutes read </p>
         <h2>Preview</h2>
-        <p>{text.length>0?text:"Enter something in the textbox above to preview."}</p>
+        <p>{text.length > 0 ? text : "Nothing to preview."}</p>
         <ul>
           {wordCounts.map(([word, count]) => (
             <li key={word}>
